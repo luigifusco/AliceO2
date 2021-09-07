@@ -25,8 +25,8 @@ class WSDPLHandler;
 
 struct GuiRenderer {
   uv_timer_t drawTimer;
-  WSDPLHandler *handler;
-  GuiCallbackContext *gui;
+  WSDPLHandler* handler;
+  GuiCallbackContext* gui;
 };
 
 struct GuiCallbackContext {
