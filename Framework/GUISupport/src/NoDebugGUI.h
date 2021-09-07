@@ -35,11 +35,11 @@ static inline void disposeGUI()
 {
 }
 
-static inline void getFrameJSON(void *data, std::ostream& json_data) override
+static inline void getFrameJSON(void* data, std::ostream& json_data) override
 {
 }
 
-static inline void getFrameRaw(void *data, void **raw_data, int *size) override
+static inline void getFrameRaw(void* data, void** raw_data, int* size) override
 {
 }
 

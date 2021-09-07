@@ -184,7 +184,7 @@ std::ostream& operator<<(std::ostream& out, const enum TerminationPolicy& policy
   } else if (policy == TerminationPolicy::WAIT) {
     out << "wait";
   } else {
-    out.setstate(std::ios_base::failbit);   
+    out.setstate(std::ios_base::failbit);
   }
   return out;
 }
@@ -785,7 +785,6 @@ void updateMetricsNames(DriverInfo& driverInfo, std::vector<DeviceMetricsInfo> c
   driverInfo.availableMetrics.swap(result);
 }
 
-
 ControlWebSocketHandler::ControlWebSocketHandler(DriverServerContext& context)
   : mContext{context}
 {
@@ -797,7 +796,7 @@ ControlWebSocketHandler::ControlWebSocketHandler(DriverServerContext& context)
 /// FIXME: No effort is done to guarantee their identity. Maybe each device
 ///        should be started with a unique secret if we wanted to provide
 ///        some secutity.
-void ControlWebSocketHandler::headers(std::map<std::string, std::string> const& headers) 
+void ControlWebSocketHandler::headers(std::map<std::string, std::string> const& headers)
 {
   if (headers.count("x-dpl-pid")) {
     auto s = headers.find("x-dpl-pid");
@@ -811,16 +810,16 @@ void ControlWebSocketHandler::headers(std::map<std::string, std::string> const& 
   }
 }
 /// FIXME: not implemented by the backend.
-void ControlWebSocketHandler::beginFragmentation()  {}
+void ControlWebSocketHandler::beginFragmentation() {}
 
 /// Invoked when a frame it's parsed. Notice you do not own the data and you must
 /// not free the memory.
-void ControlWebSocketHandler::frame(char const* frame, size_t s) 
+void ControlWebSocketHandler::frame(char const* frame, size_t s)
 {
   bool hasNewMetric = false;
   auto updateMetricsViews = Metric2DViewIndex::getUpdater({&(*mContext.infos)[mIndex].dataRelayerViewIndex,
-                                                            &(*mContext.infos)[mIndex].variablesViewIndex,
-                                                            &(*mContext.infos)[mIndex].queriesViewIndex});
+                                                           &(*mContext.infos)[mIndex].variablesViewIndex,
+                                                           &(*mContext.infos)[mIndex].queriesViewIndex});
 
   auto newMetricCallback = [&updateMetricsViews, &metrics = mContext.metrics, &hasNewMetric](std::string const& name, MetricInfo const& metric, int value, size_t metricIndex) {
     updateMetricsViews(name, metric, value, metricIndex);
@@ -857,13 +856,13 @@ void ControlWebSocketHandler::frame(char const* frame, size_t s)
 }
 
 /// FIXME: not implemented
-void ControlWebSocketHandler::endFragmentation() {};
+void ControlWebSocketHandler::endFragmentation(){};
 /// FIXME: not implemented
-void ControlWebSocketHandler::control(char const* frame, size_t s) {};
+void ControlWebSocketHandler::control(char const* frame, size_t s){};
 
 /// Invoked at the beginning of some incoming data. We simply
 /// reset actions which need to happen on a per chunk basis.
-void ControlWebSocketHandler::beginChunk() 
+void ControlWebSocketHandler::beginChunk()
 {
   didProcessMetric = false;
   didHaveNewMetric = false;
@@ -872,7 +871,7 @@ void ControlWebSocketHandler::beginChunk()
 /// Invoked after we have processed all the available incoming data.
 /// In this particular case we must handle the metric callbacks, if
 /// needed.
-void ControlWebSocketHandler::endChunk() 
+void ControlWebSocketHandler::endChunk()
 {
   if (!didProcessMetric) {
     return;
@@ -1154,16 +1153,16 @@ struct WorkflowInfo {
 void gui_callback(uv_timer_s* ctx)
 {
   GuiCallbackContext* gui = reinterpret_cast<GuiCallbackContext*>(ctx->data);
-  
-  void *draw_data = nullptr;
-  void *frame = nullptr;
+
+  void* draw_data = nullptr;
+  void* frame = nullptr;
   int size;
   uint64_t frameStart = uv_hrtime();
   uint64_t frameLatency = frameStart - gui->frameLast;
 
   // if less than 15ms have passed reuse old frame
-  if (frameLatency/1000000 > 15) {
-    if (!gui->plugin->pollGUIPreRender(gui->window, (float)frameLatency/1000000000.0f)) {
+  if (frameLatency / 1000000 > 15) {
+    if (!gui->plugin->pollGUIPreRender(gui->window, (float)frameLatency / 1000000000.0f)) {
       *(gui->guiQuitRequested) = true;
       return;
     }
@@ -1174,13 +1173,12 @@ void gui_callback(uv_timer_s* ctx)
 
   gui->plugin->pollGUIPostRender(gui->window, draw_data);
 
-  if (frameLatency/1000000 > 15) {
+  if (frameLatency / 1000000 > 15) {
     uint64_t frameEnd = uv_hrtime();
     *(gui->frameCost) = (frameEnd - frameStart) / 1000000;
     *(gui->frameLatency) = frameLatency / 1000000;
     gui->frameLast = frameStart;
   }
-
 }
 
 /// Force single stepping of the children
